@@ -1,7 +1,3 @@
-
-## Диаграмма 1
-
-```plantuml
 @startuml
 skinparam actorStyle awesome
 
@@ -25,23 +21,19 @@ rectangle "Сервис WB Buyer" {
     Customer --> (Отслеживание заказа)
     Customer --> (Оставление отзыва)
     Customer --> (Запрос возврата)
-    Customer --> (Запрос в поддержку) 
-   
-    
+    Customer --> (Запрос в поддержку)
+
+
     Admin --> (Управление товарами)
     Admin --> (Мониторинг заказов)
     Admin --> (Поддержка пользователей)
-    
+
     Logistics --> (Управление логистикой)
-    
+
     PaymentSystem --> (Обработка платежей)
 
     Support --> (Отработка запросов от пользователей)
     Support --> (Запрос в поддержку)
 
 }
-
-
-```
-
-![1.png](1.png)
+@enduml
