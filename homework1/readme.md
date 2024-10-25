@@ -1,4 +1,3 @@
-
 ## Диаграмма 1
 
 ```plantuml
@@ -43,6 +42,4 @@ rectangle "Сервис WB Buyer" {
 
 
 ```
-
-![1.png](homework1/1.png)
-![2.png](2.png)
+![1.png](1.png)
