@@ -1,0 +1,14 @@
+@startuml
+hide empty description
+[*] --> In_Storage
+In_Storage --> In_Cart : Добавлен в корзину
+state fork_state <<fork>>
+In_Cart --> fork_state
+fork_state --> Sold : Завершенный заказ/Успешно доставлен
+fork_state --> Excellent : Удален из корзины
+Excellent --> [*]
+In_Storage: entry/Подсчет количества единиц товара на складе.
+In_Cart : entry/Запрос в отдел логистики
+Sold --> In_Storage : Проблема с доставкой
+
+@enduml

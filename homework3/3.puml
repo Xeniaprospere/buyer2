@@ -1,0 +1,33 @@
+@startuml
+hide empty description
+[*] --> Created
+state fork_state <<fork>>
+Created --> fork_state
+fork_state ---> Authorized :  Регистрация/Вход в систему
+fork_state --> Cancelable : Добавление товара в корзину
+
+Created : do/Обработка запросов пользователя.
+Created : Действие- Регистрация/Вход в систему
+Authorized : do/ Оформление заказа
+Authorized : do/ Поиск товара
+Cancelable : entry/Генерация уведомления о новом заказе
+Cancelable : exit/ Завершение проверки данных для заказа
+Cancelable: do/Периодическая проверка статуса заказа
+Basket : do/Подсчет общей стоимости товаров в корзине.
+Basket: entry/ Подгруздка нужных товаров из базы данных для отображения
+Basket : exit/Сохранение изменений в корзине пользователя.
+The_order_is_completed : entry/Отправка уведомления о завершении заказа.
+The_order_is_completed : do/Мониторинг статуса доставки заказа.
+The_order_is_completed : exit/Закрытие заказа
+
+state join_state <<join>>
+Authorized --> join_state
+Authorized --> Cancelable : Просмотр карточки товара
+Cancelable ---> join_state : Подтверждение заказа/Отказ от заказа
+join_state--> Basket
+Basket --> The_order_is_completed : Получение товара/ Ожидание доставки / Передача товара покупателю
+The_order_is_completed --> [*]
+
+@enduml
+
+

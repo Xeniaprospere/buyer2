@@ -1,0 +1,12 @@
+@startuml
+hide empty description
+[*] --> Available
+state fork_state <<fork>>
+Available ---> fork_state
+fork_state ---> Not_available : Товар продан
+Not_available ---> fork_state : Товар возвращается на склад
+Available --> Temporary : Товар временно недоступен
+Temporary ---> Available : Товар снова доступен
+Temporary --> Not_available : Закрытие позиции
+Not_available --> [*]
+@enduml
