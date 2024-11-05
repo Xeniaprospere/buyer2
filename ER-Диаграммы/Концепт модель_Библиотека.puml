@@ -1,0 +1,19 @@
+@startuml
+entity Author {
+Name
+Date of birth
+}
+entity Book {
+Title
+Publishing house
+Year of publication
+}
+entity TheReader {
+Name
+address
+The number of the library card
+}
+Author ||--|{ Book
+Book ||--|{ TheReader
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+entity Author {
+Name
+Date of birth
+**authorId - (PK)**
+}
+entity Book {
+Title
+Publishing house
+Year of publication
+**authorId- (FK)**
+**bookId- (PK)**
+}
+entity RentalDatabase {
+Дата возврата
+Дата взятия
+**TheReaderId - (FK)**
+**bookId- (FK)**
+}
+entity TheReader {
+Name
+address
+The number of the library card
+**TheReaderId - (PK)**
+}
+Author ||--|{ Book
+Book }|--|| RentalDatabase
+RentalDatabase ||--|{ TheReader
+@enduml

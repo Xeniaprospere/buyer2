@@ -1,0 +1,18 @@
+@startuml
+
+entity User {
+Name
+Number
+Address
+}
+entity Order {
+theAmount
+orderDate
+}
+entity Product {
+title
+price
+}
+User ||--{ Order
+Order ||--{ Product
+@enduml

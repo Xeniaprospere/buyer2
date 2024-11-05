@@ -1,0 +1,29 @@
+@startuml
+entity User {
+Name
+Number
+Address
+**userId- (PK)**
+}
+entity Order {
+theAmount
+orderDate
+ **orderId- (PK)**
+ **userId -(FK)**
+}
+entity Product {
+title
+price
+**productId- (PK)**
+}
+
+entity database {
+Quantity
+**productId- (FK)**
+**orderId- (FK)**
+}
+
+User ||--|{ Order
+Order }|--|| database
+database ||--|{ Product
+@enduml
