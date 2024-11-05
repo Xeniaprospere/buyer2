@@ -1,0 +1,67 @@
+@startuml
+
+User --> Basket:1*1
+class User {
+  + userId : Integer
+  + name : Date
+  + email: String
+  + password: String
+   -зарегистрироваться(): void
+   -войти(): boolean
+   -редактировать Профиль(): void
+}
+
+class Basket {
+  + userId : Integer
+  + товары: List<Товар>
+  + productId: Integer
+  + basketId: Integer
+ -получитьОбщуюСтоимость(): Double
+ - добавитьТовар(товар: Товар): void
+ - удалитьТовар(товар: Товар): void
+}
+User --> Payment : 1.*
+
+class Payment {
+ +paymentId: Integer
+ +userId: Integer
+ +сумма: Double
+ +статус: String
+ -выполнитьОплату(): boolean
+ -отменитьОплату(): boolean
+}
+Order --> Payment: 1.1
+class Order{
+ +orderId: Integer
+ +сумма: Double
+ +датаЗаказа: Date
+ +статус: String
+ +productId: Integer
+ -выполнитьЗаказ(): boolean
+ -отменитьЗаказ(): boolean
+ -отложитьЗаказ (): boolean
+}
+Order --o Product : 1.*
+Basket --o Product :0.*
+
+class Product {
+productId: Integer
+название: String
+цена: Double
+описание: String
+доступноНаСкладе: Integer
+- обновитьЦена(newPrice: Double): void
+- получитьДетали(): String
+- проверитьНаличие(): boolean
+}
+User --> Feedback : 1*0
+Feedback --> Product : 1.*
+class Feedback {
+ + userId: Integer
+ + productId: Integer
+ + текст: String
+ + рейтинг: Integer
+ - оставитьОтзыв(): void
+ - удалитьОтзыв(): void
+}
+@enduml
