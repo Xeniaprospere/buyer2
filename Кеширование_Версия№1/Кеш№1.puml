@@ -1,0 +1,27 @@
+@startuml
+actor "Пользователь" as User
+participant "Приложение" as Application
+participant "Кеш" as Cache
+database "База данных" as DataBase
+
+User ->> Application: Запрос данных
+activate Application
+Application -> Cache: Проверка наличие данных
+alt Есть Кеш
+Cache --> Application : Возврат данных из кеша
+Application -->User: Отправить ответ
+else Данные отсутствуют или устарели
+Application -> DataBase: Запросить данные
+  activate DataBase
+DataBase -> Application: Возврат данных
+Application --> User: Отправить ответ
+Application -> Cache : Сохранить в кеше
+deactivate DataBase
+end
+
+
+
+
+
+
+@enduml
