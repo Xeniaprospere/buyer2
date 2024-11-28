@@ -1,0 +1,27 @@
+@startuml
+actor Пользователь
+participant "Приложение" as App
+participant "Встроенный кеш Приложения" as Cache
+participant "Основная БД" as Database
+Пользователь -> App : Запрос данных
+activate App
+alt Использование встроенного кеша
+
+    App -> Cache : Проверка наличия данных
+    alt Данные есть
+     Cache -> App : Возврат данных из внешнего кеша
+        App --> Пользователь : Отправить ответ
+
+    else Данные отсутствуют или устарели
+        App -> Database : Запрос данных из БД
+        activate Database
+        Database -> App : Возврат данных
+        App -> Cache : Сохранение данных во внешнем кеше
+        App --> Пользователь : Отправить ответ
+        deactivate Database
+    end
+end
+
+deactivate App
+
+@enduml

@@ -1,0 +1,485 @@
+openapi: 3.0.0
+info:
+  description: API для поиска товаров на платформе WB Buyer
+  title: WB Buyer Product Search API
+  version: 1.0.0
+servers:
+  - url: https://www.wildberries.ru/promotions/tovary-iz-za-rubezha
+paths:
+  /api/v1/products:
+    get:
+      tags:
+        - Баннеры
+      summary: Получение баннера
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/getBannerRequest"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getBannerResponse"
+        "400":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+  /api/v1/conditions/info:
+    get:
+      tags:
+        - Фильтр поиска
+      summary: Получение информации по доступным значениям для условий отображения баннера
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/conditionDto"
+        "400":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    $ref: "#/components/schemas/Response"
+  /api/v1/pages/{id}:
+    get:
+      tags:
+        - Фильтр поиска
+      summary: Получить параметры поиска по id
+      parameters:
+        - name: query
+          in: query
+          required: false
+          description: Строка поиска (ключевые слова)
+          schema:
+            type: string
+        - name: category
+          in: query
+          required: false
+          description: Фильтр по категории
+          schema:
+            type: string
+        - name: brand
+          in: query
+          required: false
+          description: Фильтр по бренду
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          description: Критерий сортировки (например, по цене или рейтингу)
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: Номер страницы
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          description: Количество товаров на странице
+          schema:
+            type: integer
+            format: int32
+            default: 20
+      responses:
+        '200':
+          description: Успешное получение списка товаров
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 12345
+                        name:
+                          type: string
+                          example: "Ноутбук XYZ"
+                        description:
+                          type: string
+                          example: "Мощный ноутбук с процессором i7"
+                        price:
+                          type: number
+                          format: float
+                          example: 50000.0
+                        category:
+                          type: string
+                          example: "Электроника"
+                        brand:
+                          type: string
+                          example: "XYZ"
+                        stock:
+                          type: integer
+                          example: 10
+                        rating:
+                          type: number
+                          format: float
+                          example: 4.5
+                        images:
+                          type: array
+                          items:
+                            type: string
+                            example: "https://www.wildberries.ru/promotions/tovary-iz-za-rubezha"
+                  total:
+                    type: integer
+                    example: 100
+                  page:
+                    type: integer
+                    example: 1
+                  limit:
+                    type: integer
+                    example: 20
+        '400':
+          description: Неправильные параметры запроса
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Внутренняя ошибка сервера"
+  /products/{id}:
+    get:
+      summary: Получение информации о товаре по ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Уникальный идентификатор товара
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешное получение товара
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 12345
+                  name:
+                    type: string
+                    example: "Ноутбук XYZ"
+                  description:
+                    type: string
+                    example: "Мощный ноутбук с процессором i7"
+                  price:
+                    type: number
+                    format: float
+                    example: 50000.0
+                  category:
+                    type: string
+                    example: "Электроника"
+                  brand:
+                    type: string
+                    example: "XYZ"
+                  stock:
+                    type: integer
+                    example: 10
+                  rating:
+                    type: number
+                    format: float
+                    example: 4.5
+                  images:
+                    type: array
+                    items:
+                      type: string
+                      example: "https://www.wildberries.ru/promotions/tovary-iz-za-rubezha"
+        '404':
+          description: Товар не найден
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Товар не найден"
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Внутренняя ошибка сервера"
+
+components:
+  schemas:
+    BannerDto:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+        description:
+          type: string
+        id:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/ImageDto"
+        meta:
+          $ref: "#/components/schemas/Meta"
+        name:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        user:
+          $ref: "#/components/schemas/UserDto"
+    Deeplink:
+      type: object
+      properties:
+        desktop:
+          type: string
+        mobile:
+          type: string
+    ImageDto:
+      type: object
+      properties:
+        size:
+          type: string
+        type:
+          type: string
+        url:
+          type: string
+    Meta:
+      type: object
+      properties:
+        bottomText:
+          type: array
+          items:
+            $ref: "#/components/schemas/TextNode"
+        button:
+          type: array
+          items:
+            $ref: "#/components/schemas/TextNode"
+        deeplink:
+          $ref: "#/components/schemas/Deeplink"
+        description:
+          type: array
+          items:
+            $ref: "#/components/schemas/TextNode"
+        is_arrow_right:
+          type: boolean
+        sub_title:
+          type: array
+          items:
+            $ref: "#/components/schemas/TextNode"
+        title:
+          type: array
+          items:
+            $ref: "#/components/schemas/TextNode"
+    Response:
+      type: object
+      properties:
+        error_code:
+          type: string
+        error_description:
+          type: string
+    TextNode:
+      type: object
+      properties:
+        color:
+          type: string
+        text:
+          type: string
+        text_decoration:
+          type: array
+          items:
+            type: string
+    UserDto:
+      type: object
+      properties:
+        login:
+          type: string
+        name:
+          type: string
+    bannerDto:
+      type: object
+      properties:
+        id:
+          type: string
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/imageDto"
+        meta:
+          $ref: "#/components/schemas/meta"
+        name:
+          type: string
+    conditionDto:
+      type: object
+      properties:
+        name:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        type:
+          type: string
+    deeplinkDto:
+      type: object
+      properties:
+        desktop:
+          type: string
+        mobile:
+          type: string
+    getBannerRequest:
+      type: object
+      properties:
+        allowedPaymentMethods:
+          type: array
+          description: Доступные способы оплаты
+          example: "[sbp]"
+          items:
+            type: string
+        bankCode:
+          type: string
+          description: Банк
+          example: sber
+        currency:
+          type: string
+          description: Валюта
+          example: RUB
+        discountCurrency:
+          type: string
+          description: Валюта скидки
+          example: RUB
+        hasItemsInCart:
+          type: boolean
+          description: Признак наличия товаров в корзине
+        location:
+          type: string
+          description: Страна
+          example: RU
+        orderPaymentStatus:
+          type: string
+          description: Статус оплаты заказа
+          example: payment_after
+        placement:
+          type: string
+          description: Для какой страницы баннер
+          example: cart
+        selectedPaymentMethod:
+          type: string
+          description: Выбранный способ оплаты
+          example: wallet
+        sumOrder:
+          type: number
+          description: Сумма товаров в корзине
+          format: double
+          example: "100"
+        walletBalance:
+          type: number
+          description: Баланс кошелька
+          format: double
+          example: "100"
+        walletMonthlyLimit:
+          type: number
+          description: Лимит WB кошелька за месяц
+          format: double
+          example: "100"
+        walletMonthlySumOrder:
+          type: number
+          description: Сумма заказа за месяц по кошельку
+          format: double
+          example: "100"
+        walletOneTimeLimit:
+          type: number
+          description: Лимит WB кошелька разовый
+          format: double
+          example: "100"
+        walletStatus:
+          type: string
+          description: Статус кошелька
+          example: none
+    getBannerResponse:
+      type: object
+      properties:
+        error_code:
+          type: string
+        error_description:
+          type: string
+        payload:
+          $ref: "#/components/schemas/bannerDto"
+    imageDto:
+      type: object
+      properties:
+        size:
+          type: string
+        type:
+          type: string
+        url:
+          type: string
+    meta:
+      type: object
+      properties:
+        button:
+          type: array
+          items:
+            $ref: "#/components/schemas/textNode"
+        deeplink:
+          $ref: "#/components/schemas/deeplinkDto"
+        description:
+          type: array
+          items:
+            $ref: "#/components/schemas/textNode"
+        isArrowRight:
+          type: boolean
+        subTitle:
+          type: array
+          items:
+            $ref: "#/components/schemas/textNode"
+        title:
+          type: array
+          items:
+            $ref: "#/components/schemas/textNode"
+    textNode:
+      type: object
+      properties:
+        color:
+          type: string
+        text:
+          type: string
+        textDecoration:
+          type: array
+          items:
+            type: string

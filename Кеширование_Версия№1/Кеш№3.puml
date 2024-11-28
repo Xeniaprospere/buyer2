@@ -1,0 +1,22 @@
+@startuml
+actor Пользователь
+participant "Приложение" as App
+participant "Внешний кеш" as Cache
+participant "Основная БД" as Database
+
+Пользователь -> App: Запрос данных
+activate App
+App -> Cache: Проверка наличие данных
+alt Кеш есть
+Cache --> App : Загрузить кеш
+else Данные отсутствуют или устарели
+Cache -> App : Уведомление о отсутствие
+App -> Database : Запрос данных
+Database -> App : Отправка кеша
+end
+
+
+
+
+
+@enduml
